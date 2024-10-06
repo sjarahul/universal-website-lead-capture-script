@@ -109,7 +109,7 @@
     // Function to add event listeners to forms
     function attachListeners() {
         var forms = document.querySelectorAll('form');
-        console.log("attaching to  " , form)
+        console.log("attaching to  " , forms)
         forms.forEach(function (form) {
             form.addEventListener('submit', handleSubmission(form), true); // Capture phase
 
@@ -124,6 +124,8 @@
     // Observe DOM changes in case forms are dynamically added
     function observeDOMChanges() {
         var observer = new MutationObserver(function (mutations) {
+    console.log("MutationObserver")
+
             attachListeners();
         });
 
@@ -134,9 +136,12 @@
     }
 
     // Initialize listeners on DOMContentLoaded
+    console.log("start")
     attachListeners();
     observeDOMChanges();
     document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOMContentLoaded")
+
         attachListeners();
         observeDOMChanges();
     });
