@@ -9,28 +9,28 @@
     function collectFormData(form) {
         const formData = {};
         let containsFile = false;
-    
+
         const elements = form.elements; // Get all form elements
-    
+
         for (let i = 0; i < elements.length; i++) {
             const field = elements[i];
-    
+
             // Detect file inputs and flag them, but don't include them in formData
             if (field.type === "file") {
                 containsFile = true;
                 continue; // Skip file inputs
             }
-    
+
             // Create a unique key for the field
             let key = field.name || field.id || ${field.tagName.toLowerCase()}_${i};
-    
+
             // Collect form fields (input, textarea, select)
             if (key && field.type !== "button" && field.type !== "submit") {
                 // Validate email fields
                 if (field.type === "email" && !isValidEmail(field.value)) {
                     throw new Error(Invalid email address for field: ${key});
                 }
-    
+
                 // Handle checkboxes and radio buttons
                 if (field.type === 'checkbox' || field.type === 'radio') {
                     if (field.checked) {
@@ -46,10 +46,10 @@
                 console.warn(Field without a name or id found and captured by tag/index: ${field.tagName}_${i});
             }
         }
-    
+
         return { formData, containsFile };
     }
-    
+
 
     // Function to send collected data to the CRM and return a promise
     function sendDataToCRM(data) {
@@ -81,11 +81,11 @@
         return function (event) {
             event.preventDefault(); // Temporarily prevent default behavior
             console.log("event", event);
-            
+
             try {
                 // Capture related form data
                 var { formData, containsFile } = collectFormData(form);
-                alert("formData"  + containsFile  + JSON.stringify(formData))
+                alert("formData" + containsFile + JSON.stringify(formData))
                 // Send data to CRM excluding file fields
                 sendDataToCRM(formData).then(function () {
                     // After the data is sent, manually trigger the default action
@@ -133,6 +133,13 @@
     }
 
     // Initialize listeners on DOMContentLoaded
-    attachListeners();
-    observeDOMChanges();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        attach(attachListeners, observeDOMChanges);
+    });
+    function attach(attachListeners, observeDOMChanges) {
+        attachListeners();
+        observeDOMChanges();
+    }
+
 })();
